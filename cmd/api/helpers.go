@@ -43,7 +43,11 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data envelo
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	w.Write(js)
+
+	_, err = w.Write(js)
+	if err != nil {
+		return errors.New("could not write JSON response")
+	}
 
 	return nil
 }
