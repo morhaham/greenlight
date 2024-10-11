@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -65,22 +64,22 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 
 		switch {
 		case errors.As(err, &syntaxError):
-			log.Println(err)
+			app.logger.PrintError(err, nil)
 			return fmt.Errorf("body contains badly-formed JSON (at character %d)", syntaxError.Offset)
 
 		case errors.Is(err, io.ErrUnexpectedEOF):
-			log.Println(err)
+			app.logger.PrintError(err, nil)
 			return errors.New("body contains badly-formed JSON")
 
 		case errors.As(err, &unmarshalTypeError):
-			log.Println(err)
+			app.logger.PrintError(err, nil)
 			if unmarshalTypeError.Field != "" {
 				return fmt.Errorf("body contains incorrect JSON type for field %q", unmarshalTypeError.Field)
 			}
 			return fmt.Errorf("body contains incorrect JSON type (at character %d)", unmarshalTypeError.Offset)
 
 		case errors.Is(err, io.EOF):
-			log.Println(err)
+			app.logger.PrintError(err, nil)
 			return errors.New("body must not be empty")
 
 		case strings.HasPrefix(err.Error(), "json: unknown field "):
@@ -91,11 +90,11 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 			return fmt.Errorf("body must not be larger tgan %d bytes", maxBytes)
 
 		case errors.As(err, &invalidUnmarshalError):
-			log.Println(err)
+			app.logger.PrintError(err, nil)
 			panic(err)
 
 		default:
-			log.Println(err)
+			app.logger.PrintError(err, nil)
 			return err
 		}
 	}
