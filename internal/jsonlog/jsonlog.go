@@ -18,7 +18,12 @@ const (
 	LevelOff
 )
 
-var levelLabel = map[Level]string{LevelInfo: "INFO", LevelError: "ERROR", LevelFatal: "FATAL", LevelOff: ""}
+var levelLabel = map[Level]string{
+	LevelInfo:  "INFO",
+	LevelError: "ERROR",
+	LevelFatal: "FATAL",
+	LevelOff:   "",
+}
 
 func (l Level) String() string {
 	return levelLabel[l]
