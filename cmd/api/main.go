@@ -36,6 +36,7 @@ type application struct {
 	models data.Models
 }
 
+// main
 func main() {
 	var cfg config
 
