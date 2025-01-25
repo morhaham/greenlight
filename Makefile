@@ -27,6 +27,11 @@ migrate-up:
 migrate-down:
 	$(MIGRATE) -path ./migrations -database "$(DB_URL)" down
 
+migrate-create:
+	@echo "Enter migration name: " && \
+	read name && \
+	$(MIGRATE) create -seq -ext=.sql -dir=migrations $$name
+
 # Clean up build artifacts
 clean:
 	rm -f $(BUILD_OUTPUT)
