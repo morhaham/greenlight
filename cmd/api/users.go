@@ -52,12 +52,15 @@ func (app *application) regiserUserHandler(w http.ResponseWriter, r *http.Reques
 		}
 		return
 	}
-	app.logger.PrintInfo("sending an email to new user: ", map[string]string{"email": user.Email})
-	err = app.mailer.Send(user.Email, "user_welcome.tmpl", user)
-	if err != nil {
-		app.serverErrorResponse(w, r, err)
-		return
-	}
+
+	app.background(func() {
+		app.logger.PrintInfo("sending an email to new user: ", map[string]string{"email": user.Email})
+		err = app.mailer.Send(user.Email, "user_welcome.tmpl", user)
+		if err != nil {
+			app.logger.PrintError(err, nil)
+			return
+		}
+	})
 
 	err = app.writeJSON(w, http.StatusCreated, envelope{"user": user}, nil)
 	if err != nil {
