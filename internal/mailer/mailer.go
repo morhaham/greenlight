@@ -3,6 +3,7 @@ package mailer
 import (
 	"bytes"
 	"embed"
+	"fmt"
 	"html/template"
 	"time"
 
@@ -18,6 +19,7 @@ type Mailer struct {
 }
 
 func New(host string, port int, username, password, sender string) Mailer {
+	fmt.Printf("mailer creds: %s %d %s %s %s", host, port, username, password, sender)
 	dialer := mail.NewDialer(host, port, username, password)
 	dialer.Timeout = 5 * time.Second
 
@@ -27,7 +29,7 @@ func New(host string, port int, username, password, sender string) Mailer {
 	}
 }
 
-// name ...
+// Send
 func (m Mailer) Send(recipient, templateFile string, data interface{}) error {
 	tmpl, err := template.New("email").ParseFS(templateFS, "templates/"+templateFile)
 	if err != nil {
@@ -53,7 +55,7 @@ func (m Mailer) Send(recipient, templateFile string, data interface{}) error {
 	}
 
 	msg := mail.NewMessage()
-	msg.SetHeader("to", recipient)
+	msg.SetHeader("To", recipient)
 	msg.SetHeader("From", m.sender)
 	msg.SetHeader("Subject", subject.String())
 	msg.SetHeader("text/plain", plainBody.String())
