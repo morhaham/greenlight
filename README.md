@@ -1,1 +1,1 @@
-## Current chapter: 14.1 - SMTP Server Setup
+## Current chapter - Creating the TokenModel and Validation Checks

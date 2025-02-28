@@ -19,6 +19,9 @@ build:
 run: build
 	$(BUILD_OUTPUT)
 
+debug:
+	dlv debug $(BUILD_DIR) 
+
 # Apply database migrations (up)
 migrate-up:
 	$(MIGRATE) -path ./migrations -database "$(DB_URL)" up
