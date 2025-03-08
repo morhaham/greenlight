@@ -9,6 +9,6 @@
 
 ## authentication
 `curl -i -d '{"email": "john22@dddexamplee.com", "password": "pa55word"}' localhost:4004/v1/users/authentication`
-
+}
 ## request with bearer token
 `curl -H "Authorization: Bearer SZ3ZKPFYJDCYWDWU2NYVKZN6UQ" localhost:4004/v1/healthcheck`
