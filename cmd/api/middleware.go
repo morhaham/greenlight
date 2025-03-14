@@ -148,7 +148,6 @@ func (app *application) requireAuthenticatedUser(next http.HandlerFunc) http.Han
 			app.authenticationRequiredResponse(w, r)
 			return
 		}
-
 		next.ServeHTTP(w, r)
 	})
 }
