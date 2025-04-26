@@ -26,8 +26,8 @@ func (m PermissionsModel) GetAllForUser(userID int64) (Permissions, error) {
 	query := `
 	SELECT permissions.code
 	FROM permissions
-	INNER JOIN user_permissions ON user_permissions.permission_id = permission_id
-	INNER JOIN users ON users_permissions.user_id = users.id
+	INNER JOIN user_permissions ON user_permissions.permission_id = permissions.id
+	INNER JOIN users ON user_permissions.user_id = users.id
 	WHERE users.id = $1`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
