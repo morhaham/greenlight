@@ -1,4 +1,5 @@
-## Next chapter - Granting Permissions
+## Greenlight API
+An API for retrieving and managing information about movies
 
 ## create user: 
 ` BODY='{"name": "Bob Jones", "email": "john22@dddexamplee.com", "password": "pa55word"}' `
