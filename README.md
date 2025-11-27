@@ -1,4 +1,4 @@
-## Current chapter - Creating the TokenModel and Validation Checks
+## Next chapter - Granting Permissions
 
 ## create user: 
 ` BODY='{"name": "Bob Jones", "email": "john22@dddexamplee.com", "password": "pa55word"}' `

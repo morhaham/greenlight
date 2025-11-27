@@ -28,7 +28,6 @@ func (app *application) recoverPanic(next http.Handler) http.Handler {
 }
 
 func (app *application) rateLimit(next http.Handler) http.Handler {
-
 	type client struct {
 		limiter  *rate.Limiter
 		lastSeen time.Time
@@ -56,6 +55,7 @@ func (app *application) rateLimit(next http.Handler) http.Handler {
 		if app.config.limiter.enabled {
 			ip, _, err := net.SplitHostPort(r.RemoteAddr)
 			if err != nil {
+				app.logError(r, err)
 				app.serverErrorResponse(w, r, err)
 			}
 
@@ -121,7 +121,6 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 	})
 }
 
-// name ...
 func (app *application) requireActivatedUser(next http.HandlerFunc) http.HandlerFunc {
 	fn := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		user := app.contextGetUser(r)
@@ -168,4 +167,22 @@ func (app *application) requirePermission(code string, next http.HandlerFunc) ht
 		next.ServeHTTP(w, r)
 	}
 	return app.requireActivatedUser(fn)
+}
+
+func (app *application) enableCORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Vary", "Origin")
+		origin := r.Header.Get("Origin")
+		trustedOrigins := app.config.cors.trustedOrigins
+		if len(trustedOrigins) > 0 {
+			for _, trustedOrigin := range trustedOrigins {
+				if strings.EqualFold(origin, trustedOrigin) {
+					w.Header().Set("Access-Control-Allow-Origin", origin)
+					break
+				}
+			}
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
